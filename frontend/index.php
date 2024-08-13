@@ -1,5 +1,5 @@
 <?php
-$url = 'http://localhost:3000/api/products';
+$url = 'https://test223-bia10qxck-adamwadins-projects.vercel.app/?vercelToolbarCode=kEd0EY-_mGel4Pz';
 $products = json_decode(file_get_contents($url), true);
 ?>
 <!DOCTYPE html>

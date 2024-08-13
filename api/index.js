@@ -1,5 +1,6 @@
-const express = require('express');
+const express = require("express");
 const app = express();
+
 
 app.use(express.json());
 app.use(require('cors')());
@@ -7,6 +8,8 @@ app.use(require('cors')());
 let products = [];
 
 app.get('/api/products', (req, res) => res.json(products));
+
+app.get('test223-six.vercel.app', (req, res) => res.json(products));
 
 app.post('/api/products', (req, res) => {
     const newProduct = { id: products.length + 1, ...req.body };
@@ -31,5 +34,6 @@ app.delete('/api/products/:id', (req, res) => {
     res.status(204).send();
 });
 
-// Export the app to be used by Vercel
+app.listen(3000, () => console.log("Server ready on port 3002."));
+
 module.exports = app;

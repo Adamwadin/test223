@@ -1,6 +1,6 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $url = 'http://localhost:3000/api/products';
+    $url = 'test223-six.vercel.app';
     $data = [
         'name' => $_POST['name'],
         'price' => $_POST['price'],
@@ -34,7 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="container">
         <h1>Create New Product</h1>
-        <form method="POST" enctype="multipart/form-data">
+        <form form="test223-six.vercel.app" method="
+            POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="name">Product Name</label>
                 <input type="text" id="name" name="name" required>
