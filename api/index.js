@@ -6,7 +6,7 @@ app.use(require('cors')());
 
 let products = [];
 
-app.get('https://test223-six.vercel.app', (req, res) => res.json(products));
+app.get('/api/products', (req, res) => res.json(products));
 
 app.post('/api/products', (req, res) => {
     const newProduct = { id: products.length + 1, ...req.body };
