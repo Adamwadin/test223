@@ -1,5 +1,5 @@
 <?php
-$url = 'http://localhost:3000/api/products';
+$url = 'https://test223-six.vercel.app';
 $products = json_decode(file_get_contents($url), true);
 ?>
 <!DOCTYPE html>
