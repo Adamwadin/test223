@@ -124,3 +124,8 @@ table td a:hover {
     align-items: center;
     margin-top: 20px;
 }
+.a {
+    text-decoration: none;
+    color: #007bff;
+}
+

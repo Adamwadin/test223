@@ -1,14 +1,18 @@
 <?php
 $id = $_GET['id'];
-$url = "http://localhost:3000/api/products/$id";
-$product = json_decode(file_get_contents($url), true);
+$url = "https://test223-six.vercel.app/api/products/$id";
+
+$productData = file_get_contents($url);
+$product = json_decode($productData, true);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = [
+        'id' => $id,
         'name' => $_POST['name'],
         'price' => $_POST['price'],
-        'image' => $_POST['image']
+        'description' => $_POST['description'],
     ];
+
     $options = [
         'http' => [
             'header' => "Content-type: application/json\r\n",
@@ -16,43 +20,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'content' => json_encode($data),
         ],
     ];
+
     $context = stream_context_create($options);
-    $result = file_get_contents($url, false, $context);
+    file_get_contents($url, false, $context);
+
     header('Location: index.php');
+    exit;
 }
 ?>
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Create New Product</title>
-        <link rel="stylesheet" href="styling.css">
-    </head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product</title>
+    <link rel="stylesheet" href="styling.css">
 </head>
 
 <body>
     <div class="container">
         <h1>Edit Product</h1>
-        <form method="POST" enctype="multipart/form-data">
+        <form method="POST">
             <div class="form-group">
                 <label for="name">Product Name</label>
-                <input type="text" id="name" name="name" value="<?php echo $product['name']; ?>" required>
+                <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($product['name']); ?>"
+                    required>
             </div>
             <div class="form-group">
                 <label for="price">Price</label>
-                <input type="text" id="price" name="price" value="<?php echo $product['price']; ?>" required>
+                <input type="text" id="price" name="price" value="<?php echo htmlspecialchars($product['price']); ?>"
+                    required>
             </div>
             <div class="form-group">
-                <label for="image">Product Image</label>
-                <input type="file" id="image" name="image">
-                <?php if ($product['image']): ?>
-                    <img src="<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>" width="100">
-                    <p>Current Image</p>
-                <?php endif; ?>
+                <label for="description">Description</label>
+                <input type="text" id="description" name="description"
+                    value="<?php echo htmlspecialchars($product['description']); ?>" required>
             </div>
             <div class="form-actions">
                 <button type="submit" class="btn">Update Product</button>

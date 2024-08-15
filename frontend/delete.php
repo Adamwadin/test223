@@ -1,6 +1,6 @@
 <?php
 $id = $_GET['id'];
-$url = "http://localhost:3000/api/products/$id";
+$url = "https://test223-six.vercel.app/api/products/$id";
 
 $options = [
     'http' => [

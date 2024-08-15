@@ -1,56 +1,60 @@
 <?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $url = 'test223-six.vercel.app';
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $data = [
+        'id' => (int) $_POST['id'],
         'name' => $_POST['name'],
-        'price' => $_POST['price'],
-        'image' => $_POST['image']
+        'price' => (float) $_POST['price'],
+        'description' => $_POST['description']
     ];
+
     $options = [
-        'http' => [
-            'header' => "Content-type: application/json\r\n",
-            'method' => 'POST',
-            'content' => json_encode($data),
-        ],
+        "http" => [
+            "header" => "Content-Type: application/json\r\n",
+            "method" => "POST",
+            "content" => json_encode($data)
+        ]
     ];
+
     $context = stream_context_create($options);
-    $result = file_get_contents($url, false, $context);
-    header('Location: index.php');
+    file_get_contents('https://test223-six.vercel.app/api/products', false, $context);
+
+    header("Location: index.php");
+    exit();
 }
 ?>
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Create New Product</title>
-        <link rel="stylesheet" href="styling.css">
-    </head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <link rel="stylesheet" href="styling.css">
 </head>
 
 <body>
     <div class="container">
-        <h1>Create New Product</h1>
-        <form form="test223-six.vercel.app" method="
-            POST" enctype="multipart/form-data">
+        <h1>Add New Product</h1>
+        <form method="POST">
             <div class="form-group">
-                <label for="name">Product Name</label>
-                <input type="text" id="name" name="name" required>
+                <label for="id">Product ID:</label>
+                <input type="number" name="id" id="id" required>
             </div>
             <div class="form-group">
-                <label for="price">Price</label>
-                <input type="text" id="price" name="price" required>
+                <label for="name">Product Name:</label>
+                <input type="text" name="name" id="name" required>
             </div>
             <div class="form-group">
-                <label for="image">Product Image</label>
-                <input type="file" id="image" name="image">
+                <label for="price">Price:</label>
+                <input type="number" step="0.01" name="price" id="price" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea name="description" id="description" required></textarea>
             </div>
             <div class="form-actions">
-                <button type="submit" class="btn">Create Product</button>
-                <a href="index.php" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn">Add Product</button>
             </div>
         </form>
     </div>
