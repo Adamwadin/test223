@@ -1,26 +1,22 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $newProduct = [
+    $data = [
         'id' => (int) $_POST['id'],
         'name' => $_POST['name'],
         'price' => (float) $_POST['price'],
         'description' => $_POST['description']
     ];
 
+    $options = [
+        "http" => [
+            "header" => "Content-Type: application/json\r\n",
+            "method" => "POST",
+            "content" => json_encode($data)
+        ]
+    ];
 
-    $productsFile = __DIR__ . '/products.json';
-
-
-    $products = [];
-
-
-    if (file_exists($productsFile)) {
-        $products = json_decode(file_get_contents($productsFile), true) ?: [];
-    }
-
-    $products[] = $newProduct;
-
-    file_put_contents($productsFile, json_encode($products, JSON_PRETTY_PRINT));
+    $context = stream_context_create($options);
+    file_get_contents('https://test223-six.vercel.app/api/products', false, $context);
 
     header("Location: index.php");
     exit();
