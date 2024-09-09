@@ -36,10 +36,18 @@ $products = json_decode($response, true);
                 <tbody>
                     <?php foreach ($products as $product): ?>
                         <tr>
-                            <td><?php echo htmlspecialchars($product['id']); ?></td>
-                            <td><?php echo htmlspecialchars($product['name']); ?></td>
-                            <td><?php echo htmlspecialchars($product['price']); ?></td>
-                            <td><?php echo htmlspecialchars($product['description']); ?></td>
+                            <td>
+                                <?php echo htmlspecialchars($product['id']); ?>
+                            </td>
+                            <td>
+                                <?php echo htmlspecialchars($product['name']); ?>
+                            </td>
+                            <td>
+                                <?php echo htmlspecialchars($product['price']); ?>
+                            </td>
+                            <td>
+                                <?php echo htmlspecialchars($product['description']); ?>
+                            </td>
                             <td>
                                 <a href="edit.php?id=<?php echo $product['id']; ?>">Edit</a>
                                 <a href="delete.php?id=<?php echo $product['id']; ?>">Delete</a>
