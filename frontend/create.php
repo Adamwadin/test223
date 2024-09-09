@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     ];
 
 
-    $productsFile = 'products.json';
+    $productsFile = __DIR__ . '/products.json';
 
 
     $products = [];
