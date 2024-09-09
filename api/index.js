@@ -1,29 +1,16 @@
+const fs = require('fs');
 const express = require("express");
-const fs = require("fs");
-const path = require("path");
 const app = express();
 
 app.use(express.json());
 app.use(require('cors')());
 
-const productsFilePath = path.join(__dirname, 'products.json');
+let products = [
+    { id: 1, name: 'meeeeep', price: 1.99, description: "hejsansvensjan" },
+    { id: 2, name: 'moooop', price: 0.99, description: "meeoppp" }
+];
 
-const readProductsFromFile = () => {
-    try {
-        const data = fs.readFileSync(productsFilePath);
-        return JSON.parse(data);
-    } catch (error) {
-        return [];
-    }
-};
-
-const writeProductsToFile = (products) => {
-    fs.writeFileSync(productsFilePath, JSON.stringify(products, null, 2));
-};
-
-let products = readProductsFromFile();
-
-const findProductById = (id) => products.find(p => p.id === id);
+const findProductById = id => products.find(p => p.id === id);
 
 app.get('/', (req, res) => res.json(products));
 
@@ -37,23 +24,25 @@ app.get('/api/products/:id', (req, res) => {
 app.post('/api/products', (req, res) => {
     const newProduct = { id: products.length + 1, ...req.body };
     products.push(newProduct);
-    writeProductsToFile(products);
-    res.status(201).json(newProduct);
+
+    // Write the updated products array to products.json
+    fs.writeFile(path.join(__dirname, 'products.json'), JSON.stringify(products, null, 2), (err) => {
+        if (err) {
+            return res.status(500).json({ error: 'Failed to write to file' });
+        }
+        res.status(201).json(newProduct);
+    });
 });
 
 app.put('/api/products/:id', (req, res) => {
     const id = +req.params.id;
     const product = findProductById(id);
-    if (product) {
-        Object.assign(product, req.body);
-        writeProductsToFile(products);
-    }
+    if (product) Object.assign(product, req.body);
     res.json(product || {});
 });
 
 app.delete('/api/products/:id', (req, res) => {
     products = products.filter(p => p.id !== +req.params.id);
-    writeProductsToFile(products);
     res.status(204).send();
 });
 
