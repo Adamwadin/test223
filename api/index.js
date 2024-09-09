@@ -1,4 +1,3 @@
-const fs = require('fs');
 const express = require("express");
 const app = express();
 
@@ -24,14 +23,7 @@ app.get('/api/products/:id', (req, res) => {
 app.post('/api/products', (req, res) => {
     const newProduct = { id: products.length + 1, ...req.body };
     products.push(newProduct);
-
-    // Write the updated products array to products.json
-    fs.writeFile(path.join(__dirname, 'products.json'), JSON.stringify(products, null, 2), (err) => {
-        if (err) {
-            return res.status(500).json({ error: 'Failed to write to file' });
-        }
-        res.status(201).json(newProduct);
-    });
+    res.status(201).json(newProduct);
 });
 
 app.put('/api/products/:id', (req, res) => {
