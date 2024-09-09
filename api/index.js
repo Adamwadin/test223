@@ -16,12 +16,11 @@ const loadProducts = () => {
         const fileContent = fs.readFileSync(dataFilePath);
         products = JSON.parse(fileContent);
     } else {
-        // Create initial products and write to file
         products = [
             { id: 1, name: 'meeeeep', price: 1.99, description: "hejsansvensjan" },
             { id: 2, name: 'moooop', price: 0.99, description: "meeoppp" }
         ];
-        saveProducts();  // Save initial products to file
+        saveProducts();
     }
 };
 
