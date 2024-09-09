@@ -1,9 +1,8 @@
 <?php
-
-$url = "https://test223-six.vercel.app/api/products";
+// Update the URL to match your local or deployed API endpoint
+$url = "http://localhost:3000/api/products"; // Or use your hosted API URL
 
 $response = file_get_contents($url);
-
 $products = json_decode($response, true);
 ?>
 
@@ -21,9 +20,9 @@ $products = json_decode($response, true);
     <div class="container">
         <h1>Product List</h1>
         <?php if (!empty($products)): ?>
-            <? echo "<a class=btn href='export.php?format=csv'>Export as CSV</a>"; ?>
-            <? echo "<a class=btn href='export.php?format=xml'>Export as XML</a>"; ?>
-            <? echo "<a class=btn href='create.php?'>Add Product</a>"; ?>
+            <a class="btn" href="export.php?format=csv">Export as CSV</a>
+            <a class="btn" href="export.php?format=xml">Export as XML</a>
+            <a class="btn" href="create.php">Add Product</a>
             <table>
                 <thead>
                     <tr>
@@ -31,6 +30,7 @@ $products = json_decode($response, true);
                         <th>Name</th>
                         <th>Price</th>
                         <th>Description</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -43,16 +43,14 @@ $products = json_decode($response, true);
                             <td>
                                 <a href="edit.php?id=<?php echo $product['id']; ?>">Edit</a>
                                 <a href="delete.php?id=<?php echo $product['id']; ?>">Delete</a>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
-
             </table>
-
         <?php else: ?>
             <p>No products found.</p>
         <?php endif; ?>
-
     </div>
 </body>
 
