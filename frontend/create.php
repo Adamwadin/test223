@@ -1,5 +1,6 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Prepare the product data
     $data = [
         'id' => (int) $_POST['id'],
         'name' => $_POST['name'],
@@ -7,17 +8,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         'description' => $_POST['description']
     ];
 
+    // Convert the data to JSON format
+    $jsonData = json_encode($data);
+
+    // Define the path to the products.json file
+    $productsFilePath = '/products.json';
+
+    // Read existing products from the file
+    if (file_exists($productsFilePath)) {
+        $existingData = file_get_contents($productsFilePath);
+        $products = json_decode($existingData, true);
+    } else {
+        $products = [];
+    }
+
+    // Append the new product to the products array
+    $products[] = $data;
+
+    // Write the updated products array to the file
+    file_put_contents($productsFilePath, json_encode($products, JSON_PRETTY_PRINT));
+
+    // Prepare the HTTP context for the API request
     $options = [
         "http" => [
             "header" => "Content-Type: application/json\r\n",
             "method" => "POST",
-            "content" => json_encode($data)
+            "content" => $jsonData
         ]
     ];
 
     $context = stream_context_create($options);
     file_get_contents('https://test223-six.vercel.app/api/products', false, $context);
 
+    // Redirect to index.php
     header("Location: index.php");
     exit();
 }
