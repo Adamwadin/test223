@@ -1,6 +1,5 @@
 <?php
-// Update the URL to match your local or deployed API endpoint
-$url = "http://localhost:3000/api/products"; // Or use your hosted API URL
+$url = "http://localhost:3000/api/products";
 
 $response = file_get_contents($url);
 $products = json_decode($response, true);
