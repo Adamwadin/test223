@@ -1,84 +1,68 @@
-const express = require("express");
-const fs = require('fs');
-const path = require('path');
+const express = require('express');
 const app = express();
+const db = require('./db');  // Import the database connection
 
 app.use(express.json());
 app.use(require('cors')());
 
-const productsPath = path.join(__dirname, '/products.json');
-
-// Function to read products from the file
-const readProductsFromFile = () => {
-    if (fs.existsSync(productsPath)) {
-        const data = fs.readFileSync(productsPath);
-        return JSON.parse(data);
-    }
-    return [];
+const findProductById = (id, callback) => {
+  db.query('SELECT * FROM xml WHERE id = ?', [id], (err, results) => {
+    if (err) return callback(err);
+    callback(null, results[0]);
+  });
 };
 
-// Function to write products to the file
-const writeProductsToFile = (products) => {
-    fs.writeFileSync(productsPath, JSON.stringify(products, null, 2));
-};
+app.get('/', (req, res) => {
+  db.query('SELECT * FROM xml', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
 
-// Initialize products array from the file or use default
-let products = readProductsFromFile();
-
-const findProductById = id => products.find(p => p.id === id);
-
-app.get('/', (req, res) => res.json(products));
-
-app.get('/api/products', (req, res) => res.json(products));
+app.get('/api/products', (req, res) => {
+  db.query('SELECT * FROM xml', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
 
 app.get('/api/products/:id', (req, res) => {
-    const product = findProductById(+req.params.id);
+  const id = +req.params.id;
+  findProductById(id, (err, product) => {
+    if (err) return res.status(500).json({ error: err.message });
     res.json(product || {});
+  });
 });
 
 app.post('/api/products', (req, res) => {
-    const newProduct = { id: products.length + 1, ...req.body };
-    products.push(newProduct);
-
-    try {
-        writeProductsToFile(products);
-        res.status(201).json(newProduct);
-    } catch (err) {
-        console.error('Error writing to products.json:', err);
-        res.status(500).json({ message: 'Internal server error' });
-    }
+  const { name, price, description } = req.body;
+  db.query('INSERT INTO xml (name, price, description) VALUES (?, ?, ?)', [name, price, description], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    const newProduct = { id: results.insertId, name, price, description };
+    res.status(201).json(newProduct);
+  });
 });
 
 app.put('/api/products/:id', (req, res) => {
-    const id = +req.params.id;
-    const product = findProductById(id);
-    if (product) {
-        Object.assign(product, req.body);
-
-        try {
-            writeProductsToFile(products);
-            res.json(product);
-        } catch (err) {
-            console.error('Error writing to products.json:', err);
-            res.status(500).json({ message: 'Internal server error' });
-        }
-    } else {
-        res.status(404).json({ message: 'Product not found' });
-    }
+  const id = +req.params.id;
+  const { name, price, description } = req.body;
+  db.query('UPDATE xml SET name = ?, price = ?, description = ? WHERE id = ?', [name, price, description, id], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    findProductById(id, (err, product) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(product || {});
+    });
+  });
 });
 
 app.delete('/api/products/:id', (req, res) => {
-    products = products.filter(p => p.id !== +req.params.id);
-
-    try {
-        writeProductsToFile(products);
-        res.status(204).send();
-    } catch (err) {
-        console.error('Error writing to products.json:', err);
-        res.status(500).json({ message: 'Internal server error' });
-    }
+  const id = +req.params.id;
+  db.query('DELETE FROM xml WHERE id = ?', [id], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.status(204).send();
+  });
 });
 
-app.listen(3000, () => console.log("Server ready on port 3000."));
+app.listen(3000, () => console.log('Server ready on port 3000.'));
 
 module.exports = app;
