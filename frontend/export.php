@@ -1,5 +1,5 @@
 <?php
-$url = 'https://test223-six.vercel.app/api/products';
+$url = 'http://localhost:3000/api/products';
 $products = json_decode(file_get_contents($url), true);
 
 $format = $_GET['format'] ?? 'csv';
