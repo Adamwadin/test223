@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $jsonData = json_encode($data);
 
     // Define the path to the products.json file
-    $productsFilePath = '/products.json';
+    $productsFilePath = '../api/products.json';
 
     // Read existing products from the file
     if (file_exists($productsFilePath)) {

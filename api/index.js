@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 app.use(require('cors')());
 
-const productsPath = path.join(__dirname, 'products.json');
+const productsPath = path.join(__dirname, '/products.json');
 
 // Function to read products from the file
 const readProductsFromFile = () => {
