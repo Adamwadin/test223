@@ -6,10 +6,14 @@ app.use(express.json());
 app.use(require('cors')());
 
 const findProductById = (id, callback) => {
-  db.query('SELECT * FROM xml WHERE id = ?', [id], (err, results) => {
-    callback(null, results[0]);
-  });
-};
+    db.query('SELECT * FROM xml WHERE id = ?', [id], (err, results) => {
+        if (err) {
+        return callback(err);
+        }
+        callback(null, results[0]);
+    });
+    }
+  
 
 app.get('/', (req, res) => {
   db.query('SELECT * FROM xml', (err, results) => {
@@ -39,14 +43,15 @@ app.post('/api/products', (req, res) => {
 });
 
 app.put('/api/products/:id', (req, res) => {
-  const id = +req.params.id;
-  const { name, price, description } = req.body;
-  db.query('UPDATE xml SET name = ?, price = ?, description = ? WHERE id = ?', [name, price, description, id], (err, results) => {
-    findProductById(id, (err, product) => {
-      res.json(product || {});
+    const id = +req.params.id;
+    const { name, price, description } = req.body;
+    db.query('UPDATE xml SET name = ?, price = ?, description = ? WHERE id = ?', [name, price, description, id], (err, results) => {
+        res.json({ id, name, price, description });
     });
-  });
-});
+    });
+  
+  
+  
 
 app.delete('/api/products/:id', (req, res) => {
   const id = +req.params.id;

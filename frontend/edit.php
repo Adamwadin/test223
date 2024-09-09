@@ -1,6 +1,6 @@
 <?php
 $id = $_GET['id'];
-$url = "https://test223-six.vercel.app/api/products/$id";
+$url = "http://localhost:3000/api/products/$id";
 
 $productData = file_get_contents($url);
 $product = json_decode($productData, true);
